@@ -12,8 +12,10 @@ void KMap4Variables(int k, int opt, int pos[opt], int term);
 void Options();
 //Body
 int main(){
-	int input=0, output=0, opt=0, i=0, j=0, k=0, term=0;
-	char b[3][5], c[5]="hola", d[5]="bye", e[5]="aloha";
+	int input=0, output=0, opt=0, i=0, j=0, k=0, term=0, ho=0;
+	char b[3][5];
+	ho=0;
+	printf("%d", ho);
 	printf("How many inputs are there?\n");
 	scanf("%d", &input);	
 	opt=pow(2,input);
@@ -27,7 +29,7 @@ int main(){
 			k++;
 		}
 	}
-	printf("Write 0 if you want the POS, or write 1 if you want the SOP\n");
+	printf("Write 0 if you want the POS, or write 1 if you want the SOP\n"); 
 	scanf("%d", &term);
 	int pos1[k];
 	k=0;
@@ -98,6 +100,16 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 				active[i][j+1]=!term;
 				active[i+1][j]=!term;
 				active[i+1][j+1]=!term;
+				a=((float)1.5*pow(i,2))-((float)2.5*i);
+				b=0;
+				Options();
+				if(a==1 || a==0){
+					strcpy(group[g], opt1);
+				}
+				else{
+					strcpy(group[g], opt2);
+				}
+				g++;
 				if(Kmap[0][0]==term || Kmap[4][0]==term){
 					//As in the matrix "active", the first and last row are the same, both of them have to be changed.
 					active[0][0]=!term;
@@ -107,7 +119,7 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 				}
 			}
 		}
-		for(j=0; j<1; j++){
+		for(j=0; j<2; j++){
 			//checks for a 4-vertical group.
 			if(Kmap[0][j]==Kmap[1][j] && Kmap[0][j]==Kmap[2][j] && Kmap[0][j]==Kmap[3][j] && Kmap[0][j]==term){
 				active[0][j]=!term;
@@ -115,6 +127,10 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 				active[2][j]=!term;
 				active[3][j]=!term;
 				active[4][j]=!term;
+				c=j;
+				Options();
+				strcpy(group[g], opt3);
+				g++;
 			}
 		}
 		//Now we need to see the pairs or the singles
@@ -126,6 +142,12 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 				if(active[i][j+1]==term){
 					active[i][j]=!term;
 					active[i][j+1]=!term;
+					a=-((float)0.33*pow(i,3))+((float)1.5*pow(i,2))-((float)1.17*i);
+					b=-((float)0.5*pow(i,2))+((float)1.5*i);
+					Options();
+					strcpy(group[g], opt1);
+					strcat(group[g], opt2);
+					g++;
 					if(i==0 || i==3){
 						active[0][0]=!term;
 						active[0][1]=!term;
@@ -182,7 +204,15 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 				
 				else{
 					//Its a one group (only checks in the first column)
-					active[i][j]=!term;		
+					active[i][j]=!term;	
+					a=-((float)0.33*pow(i,3))+((float)1.5*pow(i,2))-((float)1.17*i);
+					b=-((float)0.5*pow(i,2))+((float)1.5*i);
+					c=j;
+					Options();
+					strcpy(group[g], opt1);
+					strcat(group[g], opt2);
+					strcat(group[g], opt3):
+					g++;	
 				}
 			}
 			else if(active[i][j+1]==term){
@@ -204,6 +234,14 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					strcat(group[g], opt2);
 					strcat(group[g], opt3);
 					printf("%s.....", group[g]);
+					g++;
+					a=-((float)0.33*pow(i,3))+((float)1.5*pow(i,2))-((float)1.17*i);
+					b=-((float)0.5*pow(i,2))+((float)1.5*i);
+					c=j+1;
+					Options();
+					strcpy(group[g], opt1);
+					strcat(group[g], opt2);
+					strcat(group[g], opt3):
 					g++;
 				}	
 			}
@@ -406,40 +444,40 @@ void Options(){
 	char A[2]="A", B[2]="B", C[2]="C", D[2]="D", noA[3]="A'\0", noB[2]="B'", noC[2]="C'", noD[2]="D'";
 	switch(a){
 		case 0:  
-			strcpy(opt1, A);
+			strcpy(opt1, noA);
 			break;
 		case 1: 
-			strcpy(opt1, noA);
+			strcpy(opt1, A);
 			break;
 		default: 
 			strcpy(opt1, "00");
 	}
 	switch(b){
 		case 0: 
-			strcpy(opt2, B);
+			strcpy(opt2, noB);
 			break;
 		case 1: 
-			strcpy(opt2, noB);
+			strcpy(opt2, B);
 			break;
 		default: 
 			strcpy(opt2, "00");	
 	}
 	switch(c){
 		case 0: 
-			strcpy(opt3, C);
+			strcpy(opt3, noC);
 			break;
 		case 1: 
-			strcpy(opt3, noC);
+			strcpy(opt3, C);
 			break;		
 		default: 
 			strcpy(opt3, "00");
 	}
 	switch(d){
-		case 1:  
-			strcpy(opt4, D);
-			break;
-		case 4: 
+		case 0:  
 			strcpy(opt4, noD);
+			break;
+		case 1: 
+			strcpy(opt4, D);
 			break;
 		default: 
 			strcpy(opt4, "00");
