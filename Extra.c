@@ -4,12 +4,12 @@
 #include<string.h>
 //Variable global
 //a,b, c, d tells me what term of that they take for example a= A or A' or 00.
-int a, b, c, d;
-char opt1[3], opt2[3], opt3[3], opt4[3];
+int a, b, c, d, tryInvert;
+char opt1[4], opt2[4], opt3[4], opt4[4];
 //Prototipo de funciones
 void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term);
 void KMap4Variables(int k, int opt, int pos[opt], int term);
-void Options();
+void Options(int term);
 //Body
 int main(){
 	int input=0, output=0, opt=0, i=0, j=0, k=0, term=0, hoho=0;
@@ -22,8 +22,12 @@ int main(){
 	for(i=0;i<opt;i++){
 		printf("For the first output (O_%d), write the value for position %d: ",i,i);
 		scanf("%d", &pos[i]);
+		while(pos[i]!=0 && pos[i]!=1){
+			printf("For the first output (O_%d), write the value for position %d: ",i,i);
+			scanf("%d", &pos[i]);
+		}
 		if(pos[i]==1){
-			//Find where 1s are 
+			//Find how mant 1s are 
 			k++;
 		}
 	}
@@ -48,8 +52,8 @@ int main(){
 
 void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 	//K map is literally the diagram of the K map, active is like a flag (tells me which minterms are available)
-	int Kmap[5][2], i=0, j=0, l=0, active[5][2], g=0;
-	char group[4][7];
+	int Kmap[5][2], i=0, j=0, l=0, active[5][2], g=0, cmp=0;
+	char group[4][10];
 	for(i=0; i<4; i++){
 		//initializes all to 0 
 		strcpy(group[i], "00\0");
@@ -78,12 +82,12 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 	//Eliminates the option that all the minterms are 1s
 	if(k==8){
 		//constant 1
-		strcpy(group[g], "1");
+		strcpy(group[g], "1\0");
 	}
 	//Eliminates the option that all minterms are 0s
 	else if (k==0){
 		//constant 0
-		strcpy(group[g], "0");
+		strcpy(group[g], "0\0");
 	}
 	//Checks for groups
 	else{
@@ -100,7 +104,7 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 				active[i+1][j+1]=!term;
 				a=((float)1.5*pow(i,2))-((float)2.5*i);
 				b=((float)2.5*pow(i,2))-((float)10.5*i)+9;
-				Options();
+				Options(term);
 				if(a==1 || a==0){
 					strcpy(group[g], opt1);
 				}
@@ -126,7 +130,7 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 				active[3][j]=!term;
 				active[4][j]=!term;
 				c=j;
-				Options();
+				Options(term);
 				strcpy(group[g], opt3);
 				g++;
 			}
@@ -142,7 +146,7 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					active[i][j+1]=!term;
 					a=-((float)0.33*pow(i,3))+((float)1.5*pow(i,2))-((float)1.17*i);
 					b=-((float)0.5*pow(i,2))+((float)1.5*i);
-					Options();
+					Options(term);
 					strcpy(group[g], opt1);
 					strcat(group[g], opt2);
 					g++;
@@ -162,7 +166,7 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					a=((float)1.5*pow(i,2))-((float)2.5*i);
 					b=((float)2.5*pow(i,2))-((float)10.5*i)+9;
 					c=j;
-					Options();
+					Options(term);
 					if(a==1 || a==0){
 						strcpy(group[g], opt1);
 					}
@@ -187,7 +191,7 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					a=((float)1.5*pow(i,2))-((float)2.5*i);
 					b=((float)2.5*pow(i,2))-((float)10.5*i)+9;
 					c=j+1;
-					Options();
+					Options(term);
 					if(a==1 || a==0){
 						strcpy(group[g], opt1);
 					}
@@ -212,7 +216,7 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					active[i][j]=!term;
 					a=-((float)0.33*pow(i,3))+((float)1.5*pow(i,2))-((float)1.17*i);
 					b=-((float)0.5*pow(i,2))+((float)1.5*i);
-					Options();
+					Options(term);
 					strcpy(group[g], opt1);
 					strcat(group[g], opt2);
 					g++;
@@ -227,7 +231,7 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					a=((float)1.5*pow(i,2))-((float)2.5*i);
 					b=((float)2.5*pow(i,2))-((float)10.5*i)+9;
 					c=j;
-					Options();
+					Options(term);
 					if(a==1 || a==0){
 						strcpy(group[g], opt1);
 					}
@@ -247,7 +251,7 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					a=((float)1.5*pow((i-1),2))-((float)2.5*(i-1));
 					b=((float)2.5*pow((i-1),2))-((float)10.5*(i-1))+9;
 					c=j;
-					Options();
+					Options(term);
 					if(a==1 || a==0){
 						strcpy(group[g], opt1);
 					}
@@ -267,10 +271,11 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					a=-((float)0.33*pow(i,3))+((float)1.5*pow(i,2))-((float)1.17*i);
 					b=-((float)0.5*pow(i,2))+((float)1.5*i);
 					c=j;
-					Options();
+					Options(term);
 					strcpy(group[g], opt1);
 					strcat(group[g], opt2);
 					strcat(group[g], opt3);
+					printf("a: %d, b: %d, c: %d, group: %s\n", a, b, c, group[g]);
 					g++;	
 				}
 			}
@@ -281,7 +286,7 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					a=((float)1.5*pow(i,2))-((float)2.5*i);
 					b=((float)2.5*pow(i,2))-((float)10.5*i)+9;
 					c=j+1;
-					Options();
+					Options(term);
 					if(a==1 || a==0){
 						strcpy(group[g], opt1);
 					}
@@ -301,7 +306,7 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					a=((float)1.5*pow((i-1),2))-((float)2.5*(i-1));
 					b=((float)2.5*pow((i-1),2))-((float)10.5*(i-1))+9;
 					c=j+1;
-					Options();
+					Options(term);
 					if(a==1 || a==0){
 						strcpy(group[g], opt1);
 					}
@@ -320,7 +325,7 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					active[i][j+1]=!term;
 					a=((float)1.5*pow(i,2))-((float)2.5*i);
 					b=((float)2.5*pow(i,2))-((float)10.5*i)+9;
-					Options();
+					Options(term);
 					if(a==1 || a==0){
 						strcpy(group[g], opt1);
 					}
@@ -343,10 +348,11 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					a=-((float)0.33*pow(i,3))+((float)1.5*pow(i,2))-((float)1.17*i);
 					b=-((float)0.5*pow(i,2))+((float)1.5*i);
 					c=j+1;
-					Options();
+					Options(term);
 					strcpy(group[g], opt1);
 					strcat(group[g], opt2);
 					strcat(group[g], opt3);
+					printf("a: %d, b: %d, c: %d, group: %s\n", a, b, c, group[g]);
 					g++;
 					if(i==0 || i==3){
 						active[0][1]=!term;
@@ -369,9 +375,26 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 			printf("|%d|", active[i][j]);
 			printf("%d|\n", active[i][j+1]);
 	}
+	///*
 	for(i=0;i<4; i++){
 		printf("Group %d: %s\n", i+1, group[i]);
-	}
+	}//*/
+	g=1;
+	/*
+	printf("F(ABC)=%s", group[g-1]);
+	cmp=strcmp(group[g], "00\0");
+	while(cmp==1){
+		if(term==1){
+			printf("+%s", group[g]);
+			g++;
+			cmp=strcmp(group[g], "00\0");
+		}
+		else{
+			printf("(%s)", group[g]);
+			g++;
+			cmp=strcmp(group[g], "00\0");
+		}
+	}//*/
 }
 
 void KMap4Variables(int k, int opt, int pos[opt], int term){
@@ -552,46 +575,103 @@ void KMap4Variables(int k, int opt, int pos[opt], int term){
 	}
 	
 }
-void Options(){
-	char A[3]="A\0", B[3]="B\0", C[3]="C\0", D[3]="D\0", noA[3]="A'\0", noB[3]="B'\0", noC[3]="C'\0", noD[3]="D'\0";
-	switch(a){
-		case 0:  
-			strcpy(opt1, noA);
-			break;
-		case 1: 
-			strcpy(opt1, A);
-			break;
-		default: 
-			strcpy(opt1, "00\0");
+void Options(int term){
+	char A[4]="A\0", B[4]="B\0", C[4]="C\0", D[4]="D\0", noA[4]="A'\0", noB[4]="B'\0", noC[4]="C'\0", noD[4]="D'\0";
+	if(term==1){
+		switch(a){
+			case 0:  
+				strcpy(opt1, noA);
+				break;
+			case 1: 
+				strcpy(opt1, A);
+				break;
+			default: 
+				strcpy(opt1, "00\0");
+		}
+		switch(b){
+			case 0: 
+				strcpy(opt2, noB);
+				break;
+			case 1: 
+				strcpy(opt2, B);
+				break;
+			default: 
+				strcpy(opt2, "00\0");	
+		}
+		switch(c){
+			case 0: 
+				strcpy(opt3, noC);
+				break;
+			case 1: 
+				strcpy(opt3, C);
+				break;		
+			default: 
+				strcpy(opt3, "00\0");
+		}
+		switch(d){
+			case 0:  
+				strcpy(opt4, noD);
+				break;
+			case 1: 
+				strcpy(opt4, D);
+				break;
+			default: 
+				strcpy(opt4, "00\0");
+		}
 	}
-	switch(b){
-		case 0: 
-			strcpy(opt2, noB);
-			break;
-		case 1: 
-			strcpy(opt2, B);
-			break;
-		default: 
-			strcpy(opt2, "00\0");	
-	}
-	switch(c){
-		case 0: 
-			strcpy(opt3, noC);
-			break;
-		case 1: 
-			strcpy(opt3, C);
-			break;		
-		default: 
-			strcpy(opt3, "00\0");
-	}
-	switch(d){
-		case 0:  
-			strcpy(opt4, noD);
-			break;
-		case 1: 
-			strcpy(opt4, D);
-			break;
-		default: 
-			strcpy(opt4, "00\0");
+	else{
+		strcpy(A,"A+\0");
+		strcpy(B, "B+\0");
+		strcpy(C, "C+\0");
+		strcpy(D, "D+\0");
+		strcpy(noA,"A'+\0");
+		strcpy(noB, "B'+\0");
+		strcpy(noC, "C'+\0");
+		strcpy(noD, "D'+\0");
+		switch(a){
+			case 0:  
+				strcpy(opt1, A);
+				break;
+			case 1: 
+				strcpy(opt1, noA);
+				break;
+			default: 
+				strcpy(opt1, "00\0");
+		}
+		switch(b){
+			case 0: 
+				strcpy(opt2, B);
+				break;
+			case 1: 
+				strcpy(opt2, noB);
+				break;
+			default: 
+				strcpy(opt2, "00\0");	
+		}
+		switch(c){
+			case 0: 
+				strcpy(opt3, C);
+				break;
+			case 1: 
+				strcpy(opt3, noC);
+				break;		
+			default: 
+				strcpy(opt3, "00\0");
+		}
+		switch(d){
+			case 0:  
+				strcpy(opt4, D);
+				break;
+			case 1: 
+				strcpy(opt4, noD);
+				break;
+			default: 
+				strcpy(opt4, "00\0");
+		}	
 	}
 }
+/*void POS(){
+	switch(tryInvert){
+		
+	}
+}*/
