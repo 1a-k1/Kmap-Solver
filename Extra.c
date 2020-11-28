@@ -148,6 +148,9 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					b=-((float)0.5*pow(i,2))+((float)1.5*i);
 					Options(term);
 					strcpy(group[g], opt1);
+					if(term==0){
+						strcat(group[g], "+");
+					}
 					strcat(group[g], opt2);
 					g++;
 					if(i==0 || i==3){
@@ -172,6 +175,9 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					}
 					else{
 						strcpy(group[g], opt2);
+					}
+					if(term==0){
+						strcat(group[g], "+");
 					}
 					strcat(group[g], opt3);
 					g++;
@@ -198,6 +204,9 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					else{
 						strcpy(group[g], opt2);
 					}
+					if(term==0){
+						strcat(group[g], "+");
+					}
 					strcat(group[g], opt3);
 					g++;
 					if(i==0 || i==3){
@@ -218,12 +227,15 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					b=-((float)0.5*pow(i,2))+((float)1.5*i);
 					Options(term);
 					strcpy(group[g], opt1);
+					if(term==0){
+						strcat(group[g], "+");
+					}
 					strcat(group[g], opt2);
 					g++;
 					if(i==0 || i==3){
 						active[0][0]=!term;
 						active[4][0]=!term;
-					}	
+					}
 				}
 				//vertical 2 group for first column (compares downwards)
 				else if(Kmap[i+1][j]==term){
@@ -238,6 +250,9 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					else{
 						strcpy(group[g], opt2);
 					}
+					if(term==0){
+						strcat(group[g], "+");
+					}
 					strcat(group[g], opt3);
 					g++;
 					if(i==0 || i==3){
@@ -246,7 +261,8 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					}
 				}
 				//vertical 2 group for first column (compares upwards)
-				else if(Kmap[i-1][j]==term){
+				else if(Kmap[i-1][j]==term && i!=0){
+					printf("%d", Kmap[i-1][j]);
 					active[i][j]=!term;	
 					a=((float)1.5*pow((i-1),2))-((float)2.5*(i-1));
 					b=((float)2.5*pow((i-1),2))-((float)10.5*(i-1))+9;
@@ -257,6 +273,9 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					}
 					else{
 						strcpy(group[g], opt2);
+					}
+					if(term==0){
+						strcat(group[g], "+");
 					}
 					strcat(group[g], opt3);
 					g++;
@@ -273,9 +292,14 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					c=j;
 					Options(term);
 					strcpy(group[g], opt1);
+					if(term==0){
+						strcat(group[g], "+");
+					}
 					strcat(group[g], opt2);
+					if(term==0){
+						strcat(group[g], "+");
+					}
 					strcat(group[g], opt3);
-					printf("a: %d, b: %d, c: %d, group: %s\n", a, b, c, group[g]);
 					g++;	
 				}
 			}
@@ -293,6 +317,9 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					else{
 						strcpy(group[g], opt2);
 					}
+					if(term==0){
+						strcat(group[g], "+");
+					}
 					strcat(group[g], opt3);
 					g++;
 					if(i==0 || i==3){
@@ -301,7 +328,7 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					}	
 				}
 				//Checks vertical 2-group for the second column (checks upwards)
-				else if(Kmap[i-1][j+1]==term){
+				else if(Kmap[i-1][j+1]==term && i!=0){
 					active[i][j+1]=!term;
 					a=((float)1.5*pow((i-1),2))-((float)2.5*(i-1));
 					b=((float)2.5*pow((i-1),2))-((float)10.5*(i-1))+9;
@@ -313,6 +340,9 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					else{
 						strcpy(group[g], opt2);
 					}
+					if(term==0){
+						strcat(group[g], "+");
+					}
 					strcat(group[g], opt3);
 					g++;
 					if(i==0 || i==3){
@@ -323,20 +353,15 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 				//Checks horizontally I1
 				else if(Kmap[i][j]==term){
 					active[i][j+1]=!term;
-					a=((float)1.5*pow(i,2))-((float)2.5*i);
-					b=((float)2.5*pow(i,2))-((float)10.5*i)+9;
+					a=-((float)0.33*pow(i,3))+((float)1.5*pow(i,2))-((float)1.17*i);
+					b=-((float)0.5*pow(i,2))+((float)1.5*i);
 					Options(term);
-					if(a==1 || a==0){
-						strcpy(group[g], opt1);
+					strcpy(group[g], opt1);
+					if(term==0){
+						strcat(group[g], "+");
 					}
-					else{
-						strcpy(group[g], opt2);
-					}
-					g++;
-						if(i==0 || i==3){
-						active[0][1]=!term;
-						active[4][1]=!term;
-					}	
+					strcat(group[g], opt2);
+					g++;	
 					if(i==0 || i==3){
 						active[0][1]=!term;
 						active[4][1]=!term;
@@ -350,9 +375,14 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					c=j+1;
 					Options(term);
 					strcpy(group[g], opt1);
+					if(term==0){
+						strcat(group[g], "+");
+					}
 					strcat(group[g], opt2);
+					if(term==0){
+						strcat(group[g], "+");
+					}
 					strcat(group[g], opt3);
-					printf("a: %d, b: %d, c: %d, group: %s\n", a, b, c, group[g]);
 					g++;
 					if(i==0 || i==3){
 						active[0][1]=!term;
@@ -375,17 +405,17 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 			printf("|%d|", active[i][j]);
 			printf("%d|\n", active[i][j+1]);
 	}
-	///*
+	/*
 	for(i=0;i<4; i++){
 		printf("Group %d: %s\n", i+1, group[i]);
 	}//*/
 	g=1;
-	/*
-	printf("F(ABC)=%s", group[g-1]);
+	///*
+	printf("F(ABC)=(%s)", group[g-1]);
 	cmp=strcmp(group[g], "00\0");
-	while(cmp==1){
+	while(cmp==1 && g!=4){
 		if(term==1){
-			printf("+%s", group[g]);
+			printf("+(%s)", group[g]);
 			g++;
 			cmp=strcmp(group[g], "00\0");
 		}
@@ -620,14 +650,6 @@ void Options(int term){
 		}
 	}
 	else{
-		strcpy(A,"A+\0");
-		strcpy(B, "B+\0");
-		strcpy(C, "C+\0");
-		strcpy(D, "D+\0");
-		strcpy(noA,"A'+\0");
-		strcpy(noB, "B'+\0");
-		strcpy(noC, "C'+\0");
-		strcpy(noD, "D'+\0");
 		switch(a){
 			case 0:  
 				strcpy(opt1, A);
