@@ -5,17 +5,15 @@
 //Variable global
 //a,b, c, d tells me what term of that they take for example a= A or A' or 00.
 int a, b, c, d;
-char opt1[2], opt2[2], opt3[2], opt4[2];
+char opt1[3], opt2[3], opt3[3], opt4[3];
 //Prototipo de funciones
 void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term);
 void KMap4Variables(int k, int opt, int pos[opt], int term);
 void Options();
 //Body
 int main(){
-	int input=0, output=0, opt=0, i=0, j=0, k=0, term=0, ho=0;
+	int input=0, output=0, opt=0, i=0, j=0, k=0, term=0, hoho=0;
 	char b[3][5];
-	ho=0;
-	printf("%d", ho);
 	printf("How many inputs are there?\n");
 	scanf("%d", &input);	
 	opt=pow(2,input);
@@ -51,7 +49,7 @@ int main(){
 void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 	//K map is literally the diagram of the K map, active is like a flag (tells me which minterms are available)
 	int Kmap[5][2], i=0, j=0, l=0, active[5][2], g=0;
-	char group[4][2];
+	char group[4][7];
 	for(i=0; i<4; i++){
 		//initializes all to 0 
 		strcpy(group[i], "00\0");
@@ -101,7 +99,7 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 				active[i+1][j]=!term;
 				active[i+1][j+1]=!term;
 				a=((float)1.5*pow(i,2))-((float)2.5*i);
-				b=0;
+				b=((float)2.5*pow(i,2))-((float)10.5*i)+9;
 				Options();
 				if(a==1 || a==0){
 					strcpy(group[g], opt1);
@@ -161,6 +159,18 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 				else if(active[i+1][j]==term){
 					active[i][j]=!term;
 					active[i+1][j]=!term;
+					a=((float)1.5*pow(i,2))-((float)2.5*i);
+					b=((float)2.5*pow(i,2))-((float)10.5*i)+9;
+					c=j;
+					Options();
+					if(a==1 || a==0){
+						strcpy(group[g], opt1);
+					}
+					else{
+						strcpy(group[g], opt2);
+					}
+					strcat(group[g], opt3);
+					g++;
 					if(i==0 || i==3){
 						active[0][0]=!term;
 						active[4][0]=!term;
@@ -174,6 +184,18 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 				if(active[i+1][j+1]==term){
 					active[i][j+1]=!term;
 					active[i+1][j+1]=!term;
+					a=((float)1.5*pow(i,2))-((float)2.5*i);
+					b=((float)2.5*pow(i,2))-((float)10.5*i)+9;
+					c=j+1;
+					Options();
+					if(a==1 || a==0){
+						strcpy(group[g], opt1);
+					}
+					else{
+						strcpy(group[g], opt2);
+					}
+					strcat(group[g], opt3);
+					g++;
 					if(i==0 || i==3){
 						active[0][1]=!term;
 						active[4][1]=!term;	
@@ -188,20 +210,57 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 			if(active[i][j]==term){
 				if(Kmap[i][j+1]==term){
 					active[i][j]=!term;
+					a=-((float)0.33*pow(i,3))+((float)1.5*pow(i,2))-((float)1.17*i);
+					b=-((float)0.5*pow(i,2))+((float)1.5*i);
+					Options();
+					strcpy(group[g], opt1);
+					strcat(group[g], opt2);
+					g++;
 					if(i==0 || i==3){
 						active[0][0]=!term;
 						active[4][0]=!term;
 					}	
 				}
-				//vertical 2 group for first column
+				//vertical 2 group for first column (compares downwards)
 				else if(Kmap[i+1][j]==term){
 					active[i][j]=!term;	
+					a=((float)1.5*pow(i,2))-((float)2.5*i);
+					b=((float)2.5*pow(i,2))-((float)10.5*i)+9;
+					c=j;
+					Options();
+					if(a==1 || a==0){
+						strcpy(group[g], opt1);
+					}
+					else{
+						strcpy(group[g], opt2);
+					}
+					strcat(group[g], opt3);
+					g++;
 					if(i==0 || i==3){
 						active[0][0]=!term;
 						active[4][0]=!term;
 					}
 				}
-				
+				//vertical 2 group for first column (compares upwards)
+				else if(Kmap[i-1][j]==term){
+					active[i][j]=!term;	
+					a=((float)1.5*pow((i-1),2))-((float)2.5*(i-1));
+					b=((float)2.5*pow((i-1),2))-((float)10.5*(i-1))+9;
+					c=j;
+					Options();
+					if(a==1 || a==0){
+						strcpy(group[g], opt1);
+					}
+					else{
+						strcpy(group[g], opt2);
+					}
+					strcat(group[g], opt3);
+					g++;
+					if(i==0 || i==3){
+						active[0][0]=!term;
+						active[4][0]=!term;
+					}
+				}
 				else{
 					//Its a one group (only checks in the first column)
 					active[i][j]=!term;	
@@ -211,38 +270,88 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 					Options();
 					strcpy(group[g], opt1);
 					strcat(group[g], opt2);
-					strcat(group[g], opt3):
+					strcat(group[g], opt3);
 					g++;	
 				}
 			}
 			else if(active[i][j+1]==term){
-				//Checks vertical 2-group for the second column
+				//Checks vertical 2-group for the second column (checks downwards)
 				if(Kmap[i+1][j+1]==term){
 					active[i][j+1]=!term;
+					a=((float)1.5*pow(i,2))-((float)2.5*i);
+					b=((float)2.5*pow(i,2))-((float)10.5*i)+9;
+					c=j+1;
+					Options();
+					if(a==1 || a==0){
+						strcpy(group[g], opt1);
+					}
+					else{
+						strcpy(group[g], opt2);
+					}
+					strcat(group[g], opt3);
+					g++;
+					if(i==0 || i==3){
+						active[0][1]=!term;
+						active[4][1]=!term;
+					}	
 				}
-				else if(Kmap[i][j+1]==term){
+				//Checks vertical 2-group for the second column (checks upwards)
+				else if(Kmap[i-1][j+1]==term){
 					active[i][j+1]=!term;
+					a=((float)1.5*pow((i-1),2))-((float)2.5*(i-1));
+					b=((float)2.5*pow((i-1),2))-((float)10.5*(i-1))+9;
+					c=j+1;
+					Options();
+					if(a==1 || a==0){
+						strcpy(group[g], opt1);
+					}
+					else{
+						strcpy(group[g], opt2);
+					}
+					strcat(group[g], opt3);
+					g++;
+					if(i==0 || i==3){
+						active[0][1]=!term;
+						active[4][1]=!term;
+					}	
+				}
+				//Checks horizontally I1
+				else if(Kmap[i][j]==term){
+					active[i][j+1]=!term;
+					a=((float)1.5*pow(i,2))-((float)2.5*i);
+					b=((float)2.5*pow(i,2))-((float)10.5*i)+9;
+					Options();
+					if(a==1 || a==0){
+						strcpy(group[g], opt1);
+					}
+					else{
+						strcpy(group[g], opt2);
+					}
+					g++;
 						if(i==0 || i==3){
+						active[0][1]=!term;
+						active[4][1]=!term;
+					}	
+					if(i==0 || i==3){
 						active[0][1]=!term;
 						active[4][1]=!term;
 					}	
 				}
 				else{
 					//Its a one group (only checks in the second column)
-					active[i][j]=!term;
-					strcat(group[g], opt1);
-					strcat(group[g], opt2);
-					strcat(group[g], opt3);
-					printf("%s.....", group[g]);
-					g++;
+					active[i][j+1]=!term;
 					a=-((float)0.33*pow(i,3))+((float)1.5*pow(i,2))-((float)1.17*i);
 					b=-((float)0.5*pow(i,2))+((float)1.5*i);
 					c=j+1;
 					Options();
 					strcpy(group[g], opt1);
 					strcat(group[g], opt2);
-					strcat(group[g], opt3):
+					strcat(group[g], opt3);
 					g++;
+					if(i==0 || i==3){
+						active[0][1]=!term;
+						active[4][1]=!term;
+					}	
 				}	
 			}
 		}
@@ -259,6 +368,9 @@ void KMap3Variables(int k, int opt, int pos1[k], int pos[opt], int term){
 			j=0;
 			printf("|%d|", active[i][j]);
 			printf("%d|\n", active[i][j+1]);
+	}
+	for(i=0;i<4; i++){
+		printf("Group %d: %s\n", i+1, group[i]);
 	}
 }
 
@@ -441,7 +553,7 @@ void KMap4Variables(int k, int opt, int pos[opt], int term){
 	
 }
 void Options(){
-	char A[2]="A", B[2]="B", C[2]="C", D[2]="D", noA[3]="A'\0", noB[2]="B'", noC[2]="C'", noD[2]="D'";
+	char A[3]="A\0", B[3]="B\0", C[3]="C\0", D[3]="D\0", noA[3]="A'\0", noB[3]="B'\0", noC[3]="C'\0", noD[3]="D'\0";
 	switch(a){
 		case 0:  
 			strcpy(opt1, noA);
@@ -450,7 +562,7 @@ void Options(){
 			strcpy(opt1, A);
 			break;
 		default: 
-			strcpy(opt1, "00");
+			strcpy(opt1, "00\0");
 	}
 	switch(b){
 		case 0: 
@@ -460,7 +572,7 @@ void Options(){
 			strcpy(opt2, B);
 			break;
 		default: 
-			strcpy(opt2, "00");	
+			strcpy(opt2, "00\0");	
 	}
 	switch(c){
 		case 0: 
@@ -470,7 +582,7 @@ void Options(){
 			strcpy(opt3, C);
 			break;		
 		default: 
-			strcpy(opt3, "00");
+			strcpy(opt3, "00\0");
 	}
 	switch(d){
 		case 0:  
@@ -480,6 +592,6 @@ void Options(){
 			strcpy(opt4, D);
 			break;
 		default: 
-			strcpy(opt4, "00");
+			strcpy(opt4, "00\0");
 	}
 }
