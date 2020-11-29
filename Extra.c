@@ -473,8 +473,8 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 	//Checks for groups
 	else{
 		//First checcks horizontally and vertically for groups of 8s and 4s
-		for(i=0; i<4; i++){
-			j=0;
+		for(i=0; i<3; i++){
+			j=0;   
 			//Check horizontally for 4 ----
 			if(Kmap[i][j]==Kmap[i][j+1] && Kmap[i][j+2]==Kmap[i][j+3] && Kmap[i][j]==Kmap[i][j+3] && Kmap[i][j]==term){
 				//Checks if it is an 8 group
@@ -489,29 +489,53 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 					else{
 						strcpy(group[g], opt2);
 					}
+					printf("Found a 8 group (horizontal): %s\n", group[g]);
 					g++;
 					active[i+1][j]=!term;	
 					active[i+1][j+1]=!term;
 					active[i+1][j+2]=!term;
 					active[i+1][j+3]=!term;
-					if(i==0 || i==3){
-						
-					}	
+					active[i+1][j+4]=!term;
 				}
+				//checks if the 8 group is with the borders
+				else if(i==0 && Kmap[3][j]==Kmap[3][j+1] && Kmap[3][j+2]==Kmap[3][j+3] && Kmap[3][j]==Kmap[3][j+3] && Kmap[3][j]==term){
+					horizontal8=2;
+					a=((float)1.5*pow(3,2))-((float)2.5*3);
+					b=((float)2.5*pow(3,2))-((float)10.5*3)+9;
+					Options(term);
+					if(a==1 || a==0){
+						strcpy(group[g], opt1);
+					}
+					else{
+						strcpy(group[g], opt2);
+					}
+					printf("Found a 4 group (the borders): %s\n", group[g]);
+					g++;
+					active[3][j]=!term;	
+					active[3][j+1]=!term;
+					active[3][j+2]=!term;
+					active[3][j+3]=!term;
+					active[3][j+4]=!term;
+				}				
 				//If it is not an 8 group, it is a 4 group (horizontal)
 				else if(horizontal8==0){
 					a=-((float)0.33*pow(i,3))+((float)1.5*pow(i,2))-((float)1.17*i);	
 					b=-((float)0.5*pow(i,2))+((float)1.5*i);
 					Options(term);
 					strcpy(group[g], opt1);
+					if(term==0){
+						strcat(group[g], "+");
+					}
 					strcat(group[g], opt2);
+					printf("Found a 4 group (horizontal): %s\n", group[g]);
 					g++;
 				}
 				active[i][j]=!term;	
 				active[i][j+1]=!term;
 				active[i][j+2]=!term;
 				active[i][j+3]=!term;
-				if(i==0 || (i==3 && horizontal8=1)){
+				active[i][j+4]=!term;
+				if(i==0 || horizontal8==2){
 					active[0][j]=!term;	
 					active[0][j+1]=!term;
 					active[0][j+2]=!term;
@@ -538,40 +562,53 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 					else{
 						strcpy(group[g], opt3);	
 					}
+					printf("Found an 8 group (vertical) %s\n", group[g]);
 					g++;
 					active[j][i+1]=!term;	
 					active[j+1][i+1]=!term;
 					active[j+2][i+1]=!term;
 					active[j+3][i+1]=!term;
-					if(i==3){
-						active[0][0]=!term;	
-						active[1][0]=!term;
-						active[2][0]=!term;
-						active[3][0]=!term;
-						active[4][0]=!term;
-						active[0][4]=!term;	
-						active[1][4]=!term;
-						active[2][4]=!term;
-						active[3][4]=!term;
-						active[4][4]=!term;
-					}	
-					
+					active[j+4][i+1]=!term;
+				}
+				//checks borders
+				else if(i==0 && Kmap[j][3]==Kmap[j+1][3] && Kmap[j+2][3]==Kmap[j+3][3] && Kmap[j][3]==Kmap[j+3][3] && Kmap[j][3]==term){
+					vertical8=2;
+					c=((float)1.5*pow(3,2))-((float)2.5*3);
+					d=((float)2.5*pow(3,2))-((float)10.5*3)+9;
+					Options(term);
+					if(c==1 || c==0){
+						strcpy(group[g], opt2);
+					}
+					else{
+						strcpy(group[g], opt3);	
+					}
+					printf("Found a 8 group (the borders): %s\n", group[g]);
+					g++;
+					active[j][3]=!term;	
+					active[j+1][3]=!term;
+					active[j+2][3]=!term;
+					active[j+3][3]=!term;
+					active[j+4][3]=!term;
 				}
 				//If not, it is a 4 group
 				else if(vertical8==0){
-					printf("Compare is %d", cmp);
 					c=-((float)0.33*pow(i,3))+((float)1.5*pow(i,2))-((float)1.17*i);	
 					d=-((float)0.5*pow(i,2))+((float)1.5*i);
 					Options(term);
 					strcpy(group[g], opt3);
+					if(term==0){
+						strcat(group[g], "+");
+					}
 					strcat(group[g], opt4);
+					printf("Found a 4 group (vertical): %s\n", group[g]);
 					g++;
 				}
 				active[j][i]=!term;	
 				active[j+1][i]=!term;
 				active[j+2][i]=!term;
 				active[j+3][i]=!term;
-				if(i==0){
+				active[j+4][i]=!term;
+				if(i==0 || vertical8==2){
 					active[0][0]=!term;	
 					active[1][0]=!term;
 					active[2][0]=!term;
@@ -585,72 +622,255 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 				}
 			}
 		}
-		for(i=0;i<5;i++){
-			j=0;
-			printf("|%d|", active[i][j]);
-			printf("%d|", active[i][j+1]);
-			printf("%d|", active[i][j+2]);
-			printf("%d|", active[i][j+3]);
-			printf("%d|\n", active[i][j+4]);
-		}
 		//Then, a 2X2 group will be found
 		for(i=0; i<4; i++){
 			/*tells me if the group is 2X2:
 				11
 				11					*/
 			for(j=0; j<4; j++){
-				if(Kmap[i][j]==Kmap[i][j+1] && Kmap[i+1][j]==Kmap[i+1][j+1] && Kmap[i][j]==Kmap[i+1][j] && Kmap[i][j]==term){
-					//Groups with ungrouped or groupes
-					if(active[i][j]==term || active[i+1][j+1]==term || active[i+1][j]==term || active[i][j+1]==term){
-						a=((float)1.5*pow(i,2))-((float)2.5*i);
-						b=((float)2.5*pow(i,2))-((float)10.5*i)+9;
-						c=((float)1.5*pow(j,2))-((float)2.5*j);
-						d=((float)2.5*pow(j,2))-((float)10.5*j)+9;
-						Options(term);
-						if(a==1 || a==0){
-						strcpy(group[g], opt1);
-						}
-						else{
-							strcpy(group[g], opt2);
-						}
-						if(c==1 || c==0){
-							strcat(group[g], opt3);
-						}			
-						else{
-							strcat(group[g], opt4);
-						}		
-						g++;
-						active[i][j]=!term;
-						active[i][j+1]=!term;
-						active[i+1][j]=!term;
-						active[i+1][j+1]=!term;
-						if(i==0 || i==3){
-							//As in the matrix "active", the first and last row are the same, both of them have to be changed.
-							active[0][j]=!term;
-							active[0][j+1]=!term;
-							active[4][j]=!term;
-							active[4][j+1]=!term;	
-							if(j==0){
-								active[0][0]=!term;
-								active[0][4]=!term;
-								active[4][0]=!term;
-								active[4][4]=!term;		
+				if(active[i][j]==term){
+					//Check right downwards
+					if(Kmap[i][j]==Kmap[i][j+1] && Kmap[i+1][j]==Kmap[i+1][j+1] && Kmap[i][j]==Kmap[i+1][j] && Kmap[i][j]==term){
+						//Groups with ungrouped or groupes
+						if(active[i][j]==term || active[i+1][j+1]==term || active[i+1][j]==term || active[i][j+1]==term){
+							a=((float)1.5*pow(i,2))-((float)2.5*i);
+							b=((float)2.5*pow(i,2))-((float)10.5*i)+9;
+							c=((float)1.5*pow(j,2))-((float)2.5*j);
+							d=((float)2.5*pow(j,2))-((float)10.5*j)+9;
+							Options(term);
+							if(a==1 || a==0){
+								strcpy(group[g], opt1);
+							}
+							else{
+								strcpy(group[g], opt2);
+							}
+							if(term==0){
+								strcat(group[g], "+");
+							}
+							if(c==1 || c==0){
+								strcat(group[g], opt3);
+							}			
+							else{
+								strcat(group[g], opt4);
+							}
+							printf("Found a 2X2 group: %s\n", group[g]);	
+							g++;
+							active[i][j]=!term;
+							active[i][j+1]=!term;
+							active[i+1][j]=!term;
+							active[i+1][j+1]=!term;
+							if(i==0 || i==3){
+								//As in the matrix "active", the first and last row are the same, both of them have to be changed.
+								active[0][j]=!term;
+								active[0][j+1]=!term;
+								active[4][j]=!term;
+								active[4][j+1]=!term;	
+								if(j==0 || j==3){
+									active[i][0]=!term;
+									active[i+1][0]=!term;
+									active[i][4]=!term;
+									active[i+1][4]=!term;		
+								}
+								if(j==3 && i==3){
+									active[0][0]=!term;
+								}
+							}
+							else if(j==0 || j==3){
+								active[i][0]=!term;
+								active[i+1][0]=!term;
+								active[i][4]=!term;
+								active[i+1][4]=!term;	
+								if(i==0 || i==3){
+									active[0][0]=!term;
+									active[0][4]=!term;
+									active[4][0]=!term;
+									active[4][4]=!term;
+								}
 							}
 						}
-						else if(j==0 || j==3){
-							active[i][0]=!term;
-							active[i+1][0]=!term;
-							active[i][4]=!term;
-							active[i+1][4]=!term;	
+					}	
+					//Checks right upwards
+					else if((Kmap[i][j]==Kmap[i][j+1] && Kmap[i-1][j]==Kmap[i-1][j+1] && Kmap[i][j]==Kmap[i-1][j] && Kmap[i][j]==term) && (i!=0)){
+						//Groups with ungrouped or groupes
+						if(active[i][j]==term || active[i+1][j+1]==term || active[i+1][j]==term || active[i][j+1]==term){
+							a=((float)1.5*pow((i-1),2))-((float)2.5*(i-1));
+							b=((float)2.5*pow((i-1),2))-((float)10.5*(i-1))+9;
+							c=((float)1.5*pow(j,2))-((float)2.5*j);
+							d=((float)2.5*pow(j,2))-((float)10.5*j)+9;
+							Options(term);
+							if(a==1 || a==0){
+								strcpy(group[g], opt1);
+							}
+							else{
+								strcpy(group[g], opt2);
+							}
+							if(term==0){
+								strcat(group[g], "+");
+							}
+							if(c==1 || c==0){
+								strcat(group[g], opt3);
+							}			
+							else{
+								strcat(group[g], opt4);
+							}
+							printf("Found a 2X2 group: %s\n", group[g]);	
+							g++;
+							active[i][j]=!term;
+							active[i][j+1]=!term;
+							active[i-1][j]=!term;
+							active[i-1][j+1]=!term;
 							if(i==0 || i==3){
-								active[0][0]=!term;
-								active[0][4]=!term;
-								active[4][0]=!term;
-								active[4][4]=!term;
+								//As in the matrix "active", the first and last row are the same, both of them have to be changed.
+								active[0][j]=!term;
+								active[0][j+1]=!term;
+								active[4][j]=!term;
+								active[4][j+1]=!term;	
+								if(j==0 || j==3){
+									active[i][0]=!term;
+									active[i-1][0]=!term;
+									active[i][4]=!term;
+									active[i-1][4]=!term;		
+								}
+								if(j==3 && i==3){
+									active[0][0]=!term;
+								}
+							}
+							else if(j==0 || j==3){
+								active[i][0]=!term;
+								active[i-1][0]=!term;
+								active[i][4]=!term;
+								active[i-1][4]=!term;	
+								if(i==0 || i==3){
+									active[0][0]=!term;
+									active[0][4]=!term;
+									active[4][0]=!term;
+									active[4][4]=!term;
+								}
 							}
 						}
 					}
-				}	
+					//Checks left downwards				
+					else if((Kmap[i][j]==Kmap[i][j-1] && Kmap[i+1][j]==Kmap[i+1][j-1] && Kmap[i][j]==Kmap[i+1][j-1] && Kmap[i][j]==term) && (j!=0)){
+						//Groups with ungrouped or groupes
+						if(active[i][j]==term || active[i+1][j+1]==term || active[i+1][j]==term || active[i][j+1]==term){
+							a=((float)1.5*pow(i,2))-((float)2.5*i);
+							b=((float)2.5*pow(i,2))-((float)10.5*i)+9;
+							c=((float)1.5*pow((j-1),2))-((float)2.5*(j-1));
+							d=((float)2.5*pow((j-1),2))-((float)10.5*(j-1))+9;
+							Options(term);
+							if(a==1 || a==0){
+								strcpy(group[g], opt1);
+							}
+							else{
+								strcpy(group[g], opt2);
+							}
+							if(term==0){
+								strcat(group[g], "+");
+							}
+							if(c==1 || c==0){
+								strcat(group[g], opt3);
+							}			
+							else{
+								strcat(group[g], opt4);
+							}
+							printf("Found a 2X2 group: %s\n", group[g]);	
+							g++;
+							active[i][j]=!term;
+							active[i][j-1]=!term;
+							active[i+1][j]=!term;
+							active[i+1][j-1]=!term;
+							if(i==0 || i==3){
+								//As in the matrix "active", the first and last row are the same, both of them have to be changed.
+								active[0][j]=!term;
+								active[0][j-1]=!term;
+								active[4][j]=!term;
+								active[4][j-1]=!term;	
+								if(j==0 || j==3){
+									active[i][0]=!term;
+									active[i+1][0]=!term;
+									active[i][4]=!term;
+									active[i+1][4]=!term;		
+								}
+								if(j==3 && i==3){
+									active[0][0]=!term;
+								}
+							}
+							else if(j==0 || j==3){
+								active[i][0]=!term;
+								active[i+1][0]=!term;
+								active[i][4]=!term;
+								active[i+1][4]=!term;	
+								if(i==0 || i==3){
+									active[0][0]=!term;
+									active[0][4]=!term;
+									active[4][0]=!term;
+									active[4][4]=!term;
+								}
+							}
+						}
+					}
+					//Checks left upwards
+					else if(Kmap[i][j]==Kmap[i][j-1] && Kmap[i-1][j]==Kmap[i-1][j-1] && Kmap[i][j]==Kmap[i-1][j] && Kmap[i][j]==term && j!=0 && i!=0){
+						
+						//Groups with ungrouped or groupes
+						if(active[i][j]==term || active[i+1][j+1]==term || active[i+1][j]==term || active[i][j+1]==term){
+							a=((float)1.5*pow((i-1),2))-((float)2.5*(i-1));
+							b=((float)2.5*pow((i-1),2))-((float)10.5*(i-1))+9;
+							c=((float)1.5*pow((j-1),2))-((float)2.5*(j-1));
+							d=((float)2.5*pow((j-1),2))-((float)10.5*(j-1))+9;
+							Options(term);
+							if(a==1 || a==0){
+								strcpy(group[g], opt1);
+							}
+							else{
+								strcpy(group[g], opt2);
+							}
+							if(term==0){
+								strcat(group[g], "+");
+							}
+							if(c==1 || c==0){
+								strcat(group[g], opt3);
+							}			
+							else{
+								strcat(group[g], opt4);
+							}
+							printf("Found a 2X2 group: %s\n", group[g]);	
+							g++;
+							active[i][j]=!term;
+							active[i][j-1]=!term;
+							active[i-1][j]=!term;
+							active[i-1][j-1]=!term;
+							if(i==0 || i==3){
+								//As in the matrix "active", the first and last row are the same, both of them have to be changed.
+								active[0][j]=!term;
+								active[0][j-1]=!term;
+								active[4][j]=!term;
+								active[4][j-1]=!term;	
+								if(j==0 || j==3){
+									active[i][0]=!term;
+									active[i-1][0]=!term;
+									active[i][4]=!term;
+									active[i-1][4]=!term;		
+								}
+								if(j==3 && i==3){
+									active[0][0]=!term;
+								}
+							}
+							else if(j==0 || j==3){
+								active[i][0]=!term;
+								active[i-1][0]=!term;
+								active[i][4]=!term;
+								active[i-1][4]=!term;	
+								if(i==0 || i==3){
+									active[0][0]=!term;
+									active[0][4]=!term;
+									active[4][0]=!term;
+									active[4][4]=!term;
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 		//Now we need to see the pairs or the singles
@@ -660,22 +880,27 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 				//Checks if the 2-group is horizontal: 11
 				if(active[i][j]==term){
 					if(active[i][j+1]==term){
+						printf("Found a pair (horizontal): ");
 						a=-((float)0.33*pow(i,3))+((float)1.5*pow(i,2))-((float)1.17*i);
 						b=-((float)0.5*pow(i,2))+((float)1.5*i);
 						c=((float)1.5*pow(j,2))-((float)2.5*j);
 						d=((float)2.5*pow(j,2))-((float)10.5*j)+9;
 						Options(term);
 						strcpy(group[g], opt1);
-						/*if(term==0){
+						if(term==0){
 							strcat(group[g], "+");
-						}*/
+						}
 						strcat(group[g], opt2);
+						if(term==0){
+							strcat(group[g], "+");
+						}
 						if(c==1 || c==0){
 							strcat(group[g], opt3);
 						}
 						else{
 							strcat(group[g], opt4);			
 						}
+						printf("%s\n", group[g]);
 						g++;
 						active[i][j]=!term;
 						active[i][j+1]=!term;
@@ -706,6 +931,7 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 					 1
 					 1*/	
 					else if(active[i+1][j]==term){
+						printf("Hello");
 						c=-((float)0.33*pow(j,3))+((float)1.5*pow(j,2))-((float)1.17*j);
 						d=-((float)0.5*pow(j,2))+((float)1.5*j);
 						a=((float)1.5*pow(i,2))-((float)2.5*i);
@@ -717,11 +943,15 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 						else{
 							strcpy(group[g], opt2);			
 						}
-						strcat(group[g], opt3);
-						/*if(term==0){
+						if(term==0){
 							strcat(group[g], "+");
-						}*/
+						}
+						strcat(group[g], opt3);
+						if(term==0){
+							strcat(group[g], "+");
+						}
 						strcat(group[g], opt4);
+						printf("Found a pair (vertical): %s\n", group[g]);
 						g++;
 						active[i][j]=!term;
 						active[i+1][j]=!term;
@@ -751,28 +981,41 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 				}
 			}
 		}
+		/*for(i=0;i<5;i++){
+			j=0;
+			printf("|%d|", active[i][j]);
+			printf("%d|", active[i][j+1]);
+			printf("%d|", active[i][j+2]);
+			printf("%d|", active[i][j+3]);
+			printf("%d|\n", active[i][j+4]);
+		}*/
 		//Determines pairs with the grouped or the singles
 		for(i=0;i<4;i++){
 			for(j=0; j<4; j++){
 				//Checks if the 2-group is horizontal: 1I (right)
 				if(active[i][j]==term){
 					if(Kmap[i][j+1]==term){
+						printf("Found a pair, withe the right number which was already grouped:");
 						a=-((float)0.33*pow(i,3))+((float)1.5*pow(i,2))-((float)1.17*i);
 						b=-((float)0.5*pow(i,2))+((float)1.5*i);
 						c=((float)1.5*pow(j,2))-((float)2.5*j);
 						d=((float)2.5*pow(j,2))-((float)10.5*j)+9;
 						Options(term);
 						strcpy(group[g], opt1);
-						/*if(term==0){
+						if(term==0){
 							strcat(group[g], "+");
-						}*/
+						}
 						strcat(group[g], opt2);
+						if(term==0){
+							strcat(group[g], "+");
+						}
 						if(c==1 || c==0){
 							strcat(group[g], opt3);
 						}
 						else{
 							strcat(group[g], opt4);			
 						}
+						printf("%s\n", group[g]);
 						g++;
 						active[i][j]=!term;
 						if(i==0 || i==3){
@@ -798,8 +1041,9 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 					}
 					/*checks if the 2-groups is vertical (downwards)
 					 1
-					 1*/	
+					 I*/	
 					else if(Kmap[i+1][j]==term){
+						printf("Found a pair, with the below number which was already grouped:");
 						c=-((float)0.33*pow(j,3))+((float)1.5*pow(j,2))-((float)1.17*j);
 						d=-((float)0.5*pow(j,2))+((float)1.5*j);
 						a=((float)1.5*pow(i,2))-((float)2.5*i);
@@ -811,11 +1055,15 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 						else{
 							strcpy(group[g], opt2);			
 						}
-						strcat(group[g], opt3);
-						/*if(term==0){
+						if(term==0){
 							strcat(group[g], "+");
-						}*/
+						}
+						strcat(group[g], opt3);
+						if(term==0){
+							strcat(group[g], "+");
+						}
 						strcat(group[g], opt4);
+						printf("%s\n", group[g]);
 						g++;
 						active[i][j]=!term;
 						if(j==0 || j==3){
@@ -842,7 +1090,8 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 					/*checks if the 2-groups is vertical (upwards)
 					 1
 					 1*/	
-					else if(Kmap[i-1][j] && i!=0){
+					else if(Kmap[i-1][j]==term && i!=0){
+						printf("Found a pair, with the upper number which was already grouped:");
 						c=-((float)0.33*pow(j,3))+((float)1.5*pow(j,2))-((float)1.17*j);
 						d=-((float)0.5*pow(j,2))+((float)1.5*j);
 						a=((float)1.5*pow((i-1),2))-((float)2.5*(i-1));
@@ -854,11 +1103,15 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 						else{
 							strcpy(group[g], opt2);			
 						}
-						strcat(group[g], opt3);
-						/*if(term==0){
+						if(term==0){
 							strcat(group[g], "+");
-						}*/
+						}
+						strcat(group[g], opt3);
+						if(term==0){
+							strcat(group[g], "+");
+						}
 						strcat(group[g], opt4);
+						printf("%s\n", group[g]);
 						g++;
 						active[i][j]=!term;
 						if(j==0 || j==3){
@@ -883,23 +1136,28 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 						}
 					}
 					//Check horizontally, checks the left value.
-					else if(Kmap[i][j-1] && j!=0){
+					else if(Kmap[i][j-1]==term && j!=0){
+						printf("Found a pair, withe the left number which was already grouped:");
 						a=-((float)0.33*pow(i,3))+((float)1.5*pow(i,2))-((float)1.17*i);
 						b=-((float)0.5*pow(i,2))+((float)1.5*i);
 						c=((float)1.5*pow((j-1),2))-((float)2.5*(j-1));
 						d=((float)2.5*pow((j-1),2))-((float)10.5*(j-1))+9;
 						Options(term);
 						strcpy(group[g], opt1);
-						/*if(term==0){
+						if(term==0){
 							strcat(group[g], "+");
-						}*/
+						}
 						strcat(group[g], opt2);
+						if(term==0){
+							strcat(group[g], "+");
+						}
 						if(c==1 || c==0){
 							strcat(group[g], opt3);
 						}
 						else{
 							strcat(group[g], opt4);			
 						}
+						printf("The groups is [%s]\n", group[g]);
 						g++;
 						active[i][j]=!term;
 						if(i==0 || i==3){
@@ -931,8 +1189,17 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 						d=-((float)0.5*pow(j,2))+((float)1.5*j);
 						Options(term);
 						strcpy(group[g],opt1);
+						if(term==0){
+							strcat(group[g], "+");
+						}
 						strcat(group[g], opt2);
+						if(term==0){
+							strcat(group[g], "+");
+						}
 						strcat(group[g], opt3);
+						if(term==0){
+							strcat(group[g], "+");
+						}
 						strcat(group[g], opt4);
 						g++;
 						active[i][j]=!term;
@@ -943,18 +1210,18 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 	}
 	//To see if the values were saved correctly
 	///*
-	for(i=0;i<5;i++){
+	for(i=0;i<4;i++){
 			j=0;
 			printf("|%d|", Kmap[i][j]);
 			printf("%d|", Kmap[i][j+1]);
 			printf("|%d|", Kmap[i][j+2]);
-			printf("%d|", Kmap[i][j+3]);
-			printf("|%d|\n", Kmap[i][j+4]);
+			printf("%d|\n", Kmap[i][j+3]);
 	}//*/
 	
 	//To see if the "flags" were marked correctly
 	printf("_____\n");
-	/*for(i=0;i<5;i++){
+	//*/
+	for(i=0;i<5;i++){
 			j=0;
 			printf("|%d|", active[i][j]);
 			printf("%d|", active[i][j+1]);
@@ -1071,8 +1338,5 @@ void Options(int term){
 		}	
 	}
 }
-/*void POS(){
-	switch(tryInvert){
-		
-	}
+/*void Nand(){
 }*/
