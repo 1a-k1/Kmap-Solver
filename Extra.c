@@ -416,6 +416,24 @@ void KMap3Variables(int k, int opt, int pos[opt], int term){
 			cmp=strcmp(group[g], "00\0");
 		}
 	}//*/
+	printf("\n");
+	g=0;
+	if(term==1){
+		printf("Nand version:\n");
+		printf("F(ABC)=(");
+		for(i=0; i<g+2; i++){
+			printf("(%s)'", group[i]);
+		}
+		printf(")'");
+	}
+	else{
+		printf("Nor version:\n");
+		printf("F(ABC)=(");
+		for(i=0; i<g+2; i++){
+			printf("(%s)'+", group[i]);
+		}
+		printf(")'");
+	}
 }
 
 void KMap4Variables(int k, int opt, int pos[opt], int term){
@@ -1249,7 +1267,24 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 			cmp=strcmp(group[g], "00\0");
 		}
 	}//*/
-	
+	printf("\n");
+	g=0;
+	if(term==1){
+		printf("Nand version:\n");
+		printf("F(ABC)=(");
+		for(i=0; i<g+2; i++){
+			printf("(%s)'", group[i]);
+		}
+		printf(")'");
+	}
+	else{
+		printf("Nor version:\n");
+		printf("F(ABC)=(");
+		for(i=0; i<g+2; i++){
+			printf("(%s)'+", group[i]);
+		}
+		printf(")'");
+	}
 }
 void Options(int term){
 	char A[4]="A\0", B[4]="B\0", C[4]="C\0", D[4]="D\0", noA[4]="A'\0", noB[4]="B'\0", noC[4]="C'\0", noD[4]="D'\0";
@@ -1338,5 +1373,4 @@ void Options(int term){
 		}	
 	}
 }
-/*void Nand(){
-}*/
+
