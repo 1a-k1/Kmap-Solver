@@ -417,11 +417,10 @@ void KMap3Variables(int k, int opt, int pos[opt], int term){
 		}
 	}//*/
 	printf("\n");
-	g=0;
 	if(term==1){
 		printf("Nand version:\n");
 		printf("F(ABC)=(");
-		for(i=0; i<g+2; i++){
+		for(i=0; i<g; i++){
 			printf("(%s)'", group[i]);
 		}
 		printf(")'");
@@ -429,8 +428,9 @@ void KMap3Variables(int k, int opt, int pos[opt], int term){
 	else{
 		printf("Nor version:\n");
 		printf("F(ABC)=(");
-		for(i=0; i<g+2; i++){
-			printf("(%s)'+", group[i]);
+		printf("(%s)'", group[0]);
+		for(i=0; i<g-1; i++){
+			printf("+(%s)'", group[i]);
 		}
 		printf(")'");
 	}
@@ -1268,11 +1268,10 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 		}
 	}//*/
 	printf("\n");
-	g=0;
 	if(term==1){
 		printf("Nand version:\n");
 		printf("F(ABC)=(");
-		for(i=0; i<g+2; i++){
+		for(i=0; i<g; i++){
 			printf("(%s)'", group[i]);
 		}
 		printf(")'");
@@ -1280,8 +1279,9 @@ int Kmap[5][5], i=0, j=0, l=0, active[5][5], g=0, cmp=0, horizontal8=0, vertical
 	else{
 		printf("Nor version:\n");
 		printf("F(ABC)=(");
-		for(i=0; i<g+2; i++){
-			printf("(%s)'+", group[i]);
+		printf("(%s)'", group[0]);
+		for(i=0; i<g-1; i++){
+			printf("+(%s)'", group[i]);
 		}
 		printf(")'");
 	}
